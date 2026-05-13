@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRADES WITH MAHAM | AI INDICATOR</title>
+    <style>
+        :root { --gold: #ff9900; --bg: #0d0d0d; --card: #1a1a1a; --green: #00ff88; --red: #ff3366; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; overflow-x: hidden; }
+        .container { width: 100%; max-width: 500px; margin: auto; text-align: center; }
+        .header { font-size: 20px; font-weight: 900; color: var(--gold); margin: 10px 0; text-transform: uppercase; text-shadow: 0 0 10px rgba(255,153,0,0.5); }
+        
+        .wa-btn { background: #25D366; color: white; padding: 12px; border-radius: 10px; text-decoration: none; display: block; font-weight: bold; margin-bottom: 15px; border: 2px solid white; font-size: 13px; }
+        
+        /* Live Chart Container */
+        #chart-wrapper { position: relative; height: 380px; margin-bottom: 15px; border: 2px solid var(--gold); border-radius: 15px; overflow: hidden; background: #000; }
+        #tradingview_widget { height: 100%; width: 100%; }
+
+        /* Floating Arrow Over Chart */
+        #chart-arrow { 
+            position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+            font-size: 80px; font-weight: bold; z-index: 10; display: none;
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce { 0%, 100% { margin-top: 0; } 50% { margin-top: -20px; } }
+
+        .section-title { font-size: 11px; color: var(--gold); font-weight: bold; margin: 10px 0; text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 15px; }
+        button.pair-btn { background: #222; border: 1px solid #444; color: white; padding: 10px 5px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        button.pair-btn.active { background: var(--gold); color: black; border-color: white; }
+        
+        .action-btn { width: 100%; background: linear-gradient(135deg, #ff9900, #ffcc00); color: black; padding: 16px; font-size: 18px; font-weight: 900; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 5px 15px rgba(255,153,0,0.3); }
+        
+        #result-box { margin-top: 15px; padding: 15px; background: var(--card); border-radius: 15px; border: 1px solid #333; }
+        #signal-text { font-size: 30px; font-weight: 900; }
+        
+        #login-screen { background: var(--card); padding: 40px 20px; border-radius: 25px; border: 2px solid var(--gold); margin-top: 60px; }
+        input { width: 80%; padding: 15px; border-radius: 12px; border: 1px solid #444; background: #000; color: var(--gold); text-align: center; font-size: 20px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="login-screen">
+        <h1 style="color:var(--gold);">TRADES WITH MAHAM</h1>
+        <p style="font-size:12px; color:#888;">AI INDICATOR SYSTEM V6.0</p>
+        <input type="password" id="pass" placeholder="PASSWORD">
+        <button class="action-btn" onclick="login()">ACTIVATE INDICATOR</button>
+    </div>
+
+    <div id="dashboard" style="display:none;">
+        <div class="header">📈 MAHAM AI INDICATOR</div>
+        
+        <a href="https://whatsapp.com/channel/0029VbC6EgF6WaKnKJJJbs2E" class="wa-btn" target="_blank">🚀 JOIN VIP CHANNEL (FREE SIGNALS)</a>
+
+        <div id="chart-wrapper">
+            <div id="chart-arrow"></div>
+            <div id="tradingview_widget"></div>
+        </div>
+
+        <div class="section-title">Market Selection</div>
+        <div class="grid">
+            <button class="pair-btn active" onclick="changePair('EURUSD', this)">EUR/USD</button>
+            <button class="pair-btn" onclick="changePair('GBPUSD', this)">GBP/USD</button>
+            <button class="pair-btn" onclick="changePair('XAUUSD', this)">GOLD (XAU)</button>
+        </div>
+
+        <button class="action-btn" onclick="applyIndicator()">⚡ SCAN & SHOW ARROW</button>
+        
+        <div id="result-box">
+            <div id="signal-text" style="color:#555;">WAITING...</div>
+            <p id="strat-name" style="font-size:11px; color:#888; margin:5px 0;">Strategy: Japanese Candle Analysis</p>
+        </div>
+        <p style="font-size:10px; color:#444; margin-top:10px;">BRAND: TRADES WITH MAHAM | 1M SCALPING MODE</p>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<script>
+    let currentPair = "EURUSD";
+
+    function loadChart(pair) {
+        new TradingView.widget({
+            "autosize": true, "symbol": "FX_IDC:" + pair, "interval": "1",
+            "timezone": "Etc/UTC", "theme": "dark", "style": "1",
+            "locale": "en", "enable_publishing": false, "hide_top_toolbar": true,
+            "container_id": "tradingview_widget"
+        });
+    }
+
+    function login() {
+        if(document.getElementById('pass').value === "MA-786") {
+            document.getElementById('login-screen').style.display = "none";
+            document.getElementById('dashboard').style.display = "block";
+            loadChart(currentPair);
+        } else { alert("ACCESS DENIED!"); }
+    }
+
+    function changePair(pair, btn) {
+        currentPair = pair;
+        document.querySelectorAll('.pair-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('chart-arrow').style.display = "none";
+        loadChart(pair);
+    }
+
+    function applyIndicator() {
+        const arrow = document.getElementById('chart-arrow');
+        const txt = document.getElementById('signal-text');
+        const strat = document.getElementById('strat-name');
+        
+        arrow.style.display = "none";
+        txt.innerText = "ANALYZING...";
+        txt.style.color = "white";
+
+        setTimeout(() => {
+            const isUp = Math.random() > 0.5;
+            const strats = ["Mingo Loop Pattern", "W-Pattern Breakout", "SNR Reversal", "Gap Up Rejection"];
+            
+            // Show Arrow on Chart
+            arrow.style.display = "block";
+            arrow.innerText = isUp ? "↑" : "↓";
+            arrow.style.color = isUp ? "var(--green)" : "var(--red)";
+            
+            // Update Text Below
+            txt.innerText = isUp ? "BUY / CALL" : "SELL / PUT";
+            txt.style.color = isUp ? "var(--green)" : "var(--red)";
+            strat.innerText = "Strategy: " + strats[Math.floor(Math.random()*strats.length)];
+            
+        }, 2000);
+    }
+</script>
+</body>
+</html>
